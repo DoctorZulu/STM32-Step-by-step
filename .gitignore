@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
-
+/Debug/
+/Release/
+# CubeMX generated folders
+/Drivers/
+/Middlewares/
 # Object files
 *.o
 *.ko
