@@ -18,6 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <string.h>
+uint8_t rx_data; // Variable to store received byte
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -98,10 +100,23 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  uint8_t Test[] = "Hello World !!!\r\n"; //Data to send
-	  HAL_UART_Transmit(&huart2,Test,sizeof(Test),10);// Sending in normal mode
-	  HAL_Delay(1000);
+      if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) != RESET) // Check RXNE flag
+      {
+    	  uint8_t text[100] = "Received byte is: "; //Data to send
+
+        // Read the received byte from the UART
+        HAL_UART_Receive(&huart2, &rx_data, 1, 0);
+
+        text[strlen(text)] = rx_data;
+        text[strlen(text) + 1] = '\n'; // Newline and NULL terminate string
+        text[strlen(text) + 2] = '\0';
+
+        HAL_UART_Transmit(&huart2, text, sizeof(text), HAL_MAX_DELAY);
+      }
     /* USER CODE BEGIN 3 */
+	  //uint8_t Test[] = "Serial over HAL !!!\r\n"; //Data to send
+	  //HAL_UART_Transmit(&huart2,Test,sizeof(Test),10);// Sending in normal mode
+      //HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
